@@ -1,0 +1,44 @@
+{
+  "npm-scripts-note": {
+    "build": {
+      "name": "build",
+      "command": "unbuild",
+      "description": ""
+    },
+    "dev": {
+      "name": "dev",
+      "command": "unbuild --stub",
+      "description": ""
+    },
+    "lint": {
+      "name": "lint",
+      "command": "eslint",
+      "description": ""
+    },
+    "prepublishOnly": {
+      "name": "prepublishOnly",
+      "command": "pnpm run build",
+      "description": ""
+    },
+    "release": {
+      "name": "release",
+      "command": "bumpp && npm publish",
+      "description": ""
+    },
+    "start": {
+      "name": "start",
+      "command": "tsx src/index.ts",
+      "description": ""
+    },
+    "test": {
+      "name": "test",
+      "command": "vitest",
+      "description": ""
+    },
+    "typecheck": {
+      "name": "typecheck",
+      "command": "tsc --noEmit",
+      "description": ""
+    }
+  }
+}
