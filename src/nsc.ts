@@ -3,6 +3,7 @@ import pc from "picocolors";
 import fg from "fast-glob";
 import type {PkgPath, Scripts, PkgJson, Options} from "./types";
 import {Command} from "./constant";
+import {pager} from "./pager";
 
 export class NpmScriptComments {
   private pkgJsonFile = "package.json";
@@ -37,26 +38,27 @@ export class NpmScriptComments {
   }
 
   private report() {
-    for (const [pkgPath, json] of this.pkgJsonMap) {
-      const data: {
-        [x: string]: {"Script Name": string; "Script Command": string; "Script Comment": string};
-      } = {};
-      this.log(pc.blue(`NPM scripts and description for ${pc.underline(pc.bold(json.name))}.`));
-      const scripts = this.scriptsMap.get(pkgPath);
-      const scriptsComment = this.scriptsCommentMap.get(pkgPath);
-      let index = 0;
-      for (const name in scripts) {
-        if (!Object.prototype.hasOwnProperty.call(scripts, name)) continue;
-        data[index] = {
-          "Script Name": name,
-          "Script Command": scripts[name],
-          "Script Comment": scriptsComment?.[name] || "Empty comment",
-        };
-        index++;
+    pager((logger: Console) => {
+      for (const [pkgPath, json] of this.pkgJsonMap) {
+        const data: {
+          [x: string]: {"Script Name": string; "Script Command": string; "Script Comment": string};
+        } = {};
+        logger.log(pc.blue(`NPM scripts and description for ${pc.underline(pc.bold(json.name))}.`));
+        const scripts = this.scriptsMap.get(pkgPath);
+        const scriptsComment = this.scriptsCommentMap.get(pkgPath);
+        let index = 0;
+        for (const name in scripts) {
+          if (!Object.prototype.hasOwnProperty.call(scripts, name)) continue;
+          data[index] = {
+            "Script Name": name,
+            "Script Command": scripts[name],
+            "Script Comment": scriptsComment?.[name] || "Empty comment",
+          };
+          index++;
+        }
+        logger.table(data);
       }
-      console.table(data);
-      this.log("\n");
-    }
+    });
   }
 
   private findAllPath() {
