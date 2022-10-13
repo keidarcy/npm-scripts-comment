@@ -1,20 +1,20 @@
 {
-  "name": "npm-scripts-command",
+  "name": "npm-scripts-comment",
   "type": "module",
   "version": "0.0.1",
   "packageManager": "pnpm@7.12.2",
   "description": "",
   "author": "Xing Yahao <yahao.xing1015@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/keidarcy/npm-scripts-command#readme",
+  "homepage": "https://github.com/keidarcy/npm-scripts-comment#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/keidarcy/npm-scripts-command.git"
+    "url": "git+https://github.com/keidarcy/npm-scripts-comment.git"
   },
   "bin": {
     "nsc": "./bin/cli.mjs"
   },
-  "bugs": "https://github.com/keidarcy/npm-scripts-command/issues",
+  "bugs": "https://github.com/keidarcy/npm-scripts-comment/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -66,7 +66,7 @@
     "vitest": "^0.23.4",
     "yargs": "^17.6.0"
   },
-  "scriptsCommands": {
+  "scriptsComments": {
     "build": "",
     "dev": "",
     "lint": "",

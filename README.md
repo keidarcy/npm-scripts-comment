@@ -1,19 +1,19 @@
-# NPM Scripts Command
+# NPM Scripts Comment
 
 ### Installation
 
 ```
-npm install npm-scripts-command
+npm install npm-scripts-comment
 
-yarn add npm-scripts-command
+yarn add npm-scripts-comment
 
-pnpm add npm-scripts-command
+pnpm add npm-scripts-comment
 ```
 
 ### Features
 
-- Provide command for npm scripts.
-- Works well community solution.
+- Provide comments key for npm scripts.
+- Works well with pre-commit git hook.
 - Support monorepo.
 
 In a big `package.json` file, we often have a huge list of `scripts` field. It means everybody likes NPM scripts, it's simple easy, we use it everywhere in local development, in CI test flow, in production build. But the problem is while times goes by, _why it's there?_, _where do we use this script?_ always come to mind.
@@ -21,37 +21,29 @@ In a big `package.json` file, we often have a huge list of `scripts` field. It m
 There is no standard place to document them!
 Document somewhere in a random file could always possible, but it's not standard or consistency.
 
-### *`NPM Scripts Command` comes to help!*
+### `NPM Scripts Comment` comes to help!
 
 ### Get started
+
 
 ```
 npx nsc sync
 ```
 
-`NPM Scripts Command` will scan all `package.json` and add `scriptCommands` like below.
+`NPM Scripts Comment` will scan all `package.json` and add `scriptComments` like below.
 
 ```json
 {
   "scripts": {
     "build": "tsc"
   },
-  "scriptsCommands": {
+  "scriptsComments": {
     "build": "Build whole project"
   }
 }
 ```
+
 Recommend add `sync` to git pre-commit hook.
-
-### Work with linter
-
-```
-npx nsc sync
-```
-
-If `scripts` has more keys more then `scriptsCommands` add script key to `scriptsCommands`.
-If `scriptsCommands` has more keys than `scripts`, throw errors to require fix deleted script.
-If you don't to stop commit add with `--ignore-` flag.
 
 ### See report
 
@@ -59,18 +51,18 @@ If you don't to stop commit add with `--ignore-` flag.
 npx nsc report
 ```
 
-generate all scripts and script commands from current root directory.
+generate all scripts and script comments from current root directory.
 
 
 ### Usage
 
 ```
-Usage: nsc [command]
-Command:
-  sync          Sync scripts with scriptsCommands field.
+Usage: nsc [option]
+Options:
+  sync          Sync scripts with scriptsComments field.
   help          Show this help message.
-  report        Show report of scripts and scriptsCommands.
-  lint          Check if scripts is synced with scriptsCommands field.
+  report        Show report of scripts and scriptsComments.
+  lint          Check if scripts is synced with scriptsComments field.
 ```
 
 

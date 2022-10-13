@@ -1,13 +1,13 @@
-import {Command} from "./constant";
+import {Comment} from "./constant";
 
 export type PkgJson = {
   scripts: Scripts;
-  scriptsCommands: Scripts;
+  scriptsComments: Scripts;
   name: string;
 };
 export type PkgPath = string;
 export type ScriptName = string;
-export type ScriptCommand = string;
+export type ScriptComment = string;
 export type Scripts = {
-  [scriptName: ScriptName]: ScriptCommand;
+  [scriptName: ScriptName]: ScriptComment;
 };
