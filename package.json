@@ -1,7 +1,7 @@
 {
   "name": "npm-scripts-comment",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "packageManager": "pnpm@7.12.2",
   "description": "",
   "author": "Xing Yahao <yahao.xing1015@gmail.com>",
