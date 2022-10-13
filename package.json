@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.1",
   "packageManager": "pnpm@7.12.2",
-  "description": "",
+  "description": "A package to provide a field in package.json to comment npm scripts.",
   "author": "Xing Yahao <yahao.xing1015@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/keidarcy/npm-scripts-comment#readme",
@@ -16,7 +16,12 @@
     "npm-scripts-comment": "./bin/cli.mjs"
   },
   "bugs": "https://github.com/keidarcy/npm-scripts-comment/issues",
-  "keywords": [],
+  "keywords": [
+    "package json",
+    "npm scripts",
+    "npm scripts comment",
+    "package json comment"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {
