@@ -1,5 +1,3 @@
-import {Comment} from "./constant";
-
 export type PkgJson = {
   scripts: Scripts;
   scriptsComments: Scripts;

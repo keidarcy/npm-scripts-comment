@@ -32,8 +32,11 @@ export class NpmScriptComments {
       case Command.DRY_RUN:
         this.dryRun();
         break;
-      default:
+      case Command.HELP:
         this.help();
+        break;
+      default:
+        this.dryRun();
     }
   }
 

@@ -1,4 +1,4 @@
-# NPM Scripts Comment
+# npm scripts comment
 
 ### Installation
 
@@ -21,16 +21,16 @@ In a big `package.json` file, we often have a huge list of `scripts` field. It m
 There is no standard place to document them!
 Document somewhere in a random file could always possible, but it's not standard or consistency.
 
-### `NPM Scripts Comment` comes to help!
+### `npm scripts comment` comes to help!
 
 ### Get started
 
 
 ```
-npx nsc sync
+npx npm-scripts-comment
 ```
 
-`NPM Scripts Comment` will scan all `package.json` and add `scriptComments` like below.
+`npm scripts comment` will scan all `package.json` and add `scriptComments` like below.
 
 ```json
 {
