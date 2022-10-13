@@ -1,4 +1,4 @@
-import {NpmScriptComments} from "./nsc";
-import {parseOptions} from "./cli";
+import {NpmScriptCommands} from "./nsc";
+import {parseArgs} from "./cli";
 
-NpmScriptComments.create(parseOptions()).run();
+NpmScriptCommands.create(parseArgs()).run();

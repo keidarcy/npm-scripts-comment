@@ -1,11 +1,17 @@
-import {Options} from "./types";
+import {Command} from "./constant";
+import pc from "picocolors";
 
-export function parseOptions(): Options {
-  const command = process.argv[2];
-  const flag = process.argv[3];
-  return {
-    command,
-    dryRun: flag === "--dry-run",
-    ignoreUnSynced: flag === "--ignore-un-synced",
-  } as Options;
+export function parseArgs(): Command {
+  const command = process.argv[2] as Command;
+  const others = process.argv.slice(3);
+  if (others.length) {
+    console.log(pc.red(`do not support ${others.join(" ")}`));
+    process.exit(1);
+  }
+
+  if (!Object.values(Command).includes(command)) {
+    console.log(pc.red(`Unknown arguments: ${command}`));
+    return Command.HELP;
+  }
+  return command;
 }

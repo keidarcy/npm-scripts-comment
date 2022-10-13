@@ -1,64 +1,79 @@
 import fs from "node:fs";
 import pc from "picocolors";
 import fg from "fast-glob";
-import type {PkgPath, Scripts, PkgJson, Options} from "./types";
+import type {PkgPath, Scripts, PkgJson} from "./types";
 import {Command} from "./constant";
-import {pager} from "./pager";
 
-export class NpmScriptComments {
+export class NpmScriptCommands {
   private pkgJsonFile = "package.json";
   private ignorePath = ["node_modules", "**/**/node_modules"];
   private log = console.log;
   private pkgJsonMap = new Map<PkgPath, PkgJson>();
   private pkgJsonPaths: PkgPath[] = [];
   private scriptsMap = new Map<PkgPath, Scripts>();
-  private scriptsCommentMap = new Map<PkgPath, Scripts>();
+  private scriptsCommandsMap = new Map<PkgPath, Scripts>();
   private errors: Error[] = [];
 
-  constructor(private readonly options: Options) {
+  constructor(private readonly command: Command) {
     this.getAll();
   }
 
   public run() {
-    switch (this.options.command) {
-      case Command.Sync:
+    switch (this.command) {
+      case Command.SYNC:
         this.sync();
         break;
-      case Command.Report:
+      case Command.REPORT:
         this.report();
         break;
+      case Command.LINT:
+        this.lint();
+        break;
+      case Command.DRY_RUN:
+        this.dryRun();
+        break;
+      default:
+        this.help();
     }
   }
 
+  private help() {
+    const helpMessage = `
+Usage: nsc [command]
+Command:
+  sync          Sync scripts with scriptsCommands field.
+  help          Show this help message.
+  report        Show report of scripts and scriptsCommands.
+  lint          Check if scripts is synced with scriptsCommands field.
+`;
+    console.log(helpMessage);
+  }
+
   private sync() {
-    this.addComment();
-    this.handleUnSynced();
-    this.handlerDryRun();
+    this.addCommands();
     this.write();
   }
 
   private report() {
-    pager((logger: Console) => {
-      for (const [pkgPath, json] of this.pkgJsonMap) {
-        const data: {
-          [x: string]: {"Script Name": string; "Script Command": string; "Script Comment": string};
-        } = {};
-        logger.log(pc.blue(`NPM scripts and description for ${pc.underline(pc.bold(json.name))}.`));
-        const scripts = this.scriptsMap.get(pkgPath);
-        const scriptsComment = this.scriptsCommentMap.get(pkgPath);
-        let index = 0;
-        for (const name in scripts) {
-          if (!Object.prototype.hasOwnProperty.call(scripts, name)) continue;
-          data[index] = {
-            "Script Name": name,
-            "Script Command": scripts[name],
-            "Script Comment": scriptsComment?.[name] || "Empty comment",
-          };
-          index++;
-        }
-        logger.table(data);
+    for (const [pkgPath, json] of this.pkgJsonMap) {
+      const data: {
+        [x: string]: {"Script Name": string; "Script Command": string; "Script Commands": string};
+      } = {};
+      this.log(pc.blue(`NPM scripts and description for ${pc.underline(pc.bold(json.name))}.`));
+      const scripts = this.scriptsMap.get(pkgPath);
+      const scriptsCommands = this.scriptsCommandsMap.get(pkgPath);
+      let index = 0;
+      for (const name in scripts) {
+        if (!Object.prototype.hasOwnProperty.call(scripts, name)) continue;
+        data[index] = {
+          "Script Name": name,
+          "Script Command": scripts[name],
+          "Script Commands": scriptsCommands?.[name] || "Empty command",
+        };
+        index++;
       }
-    });
+      console.table(data);
+    }
   }
 
   private findAllPath() {
@@ -71,7 +86,7 @@ export class NpmScriptComments {
     for (const pkgJsonPath of this.pkgJsonPaths) {
       const json = this.parse(pkgJsonPath);
       this.scriptsMap.set(pkgJsonPath, json.scripts);
-      this.scriptsCommentMap.set(pkgJsonPath, json.scriptsComment || {});
+      this.scriptsCommandsMap.set(pkgJsonPath, json.scriptsCommands || {});
       this.pkgJsonMap.set(pkgJsonPath, json);
     }
   }
@@ -85,18 +100,18 @@ export class NpmScriptComments {
     }
   }
 
-  private addComment() {
+  private addCommands() {
     for (let [pkgJsonPath, json] of this.pkgJsonMap) {
       const scripts = this.scriptsMap.get(pkgJsonPath);
-      const scriptsComment = this.scriptsCommentMap.get(pkgJsonPath);
+      const scriptsCommands = this.scriptsCommandsMap.get(pkgJsonPath);
 
-      if (!json.scriptsComment) {
-        this.log(pc.blue(`🚀 Generate \`scriptsComment\` key for ${pc.underline(pc.bold(pkgJsonPath))} first time.`));
-        json = {...json, scriptsComment: {}};
+      if (!json.scriptsCommands) {
+        this.log(pc.blue(`🚀 Generate \`scriptsCommands\` key for ${pc.underline(pc.bold(pkgJsonPath))} first time.`));
+        json = {...json, scriptsCommands: {}};
       }
       for (const scriptName in scripts) {
         if (!Object.prototype.hasOwnProperty.call(scripts, scriptName)) continue;
-        json.scriptsComment[scriptName] = scriptsComment?.[scriptName] || "";
+        json.scriptsCommands[scriptName] = scriptsCommands?.[scriptName] || "";
       }
       this.pkgJsonMap.set(pkgJsonPath, json);
     }
@@ -110,13 +125,12 @@ export class NpmScriptComments {
       pc.green(
         `\n✨ Successfully synced ${pc.green(
           pc.underline(pc.bold(this.pkgJsonPaths.map((p) => `\`${p}\``).join(" "))),
-        )} scriptsComment with scripts field.`,
+        )} scriptsCommands with scripts field.`,
       ),
     );
   }
 
-  private handlerDryRun() {
-    if (!this.options.dryRun) return;
+  private dryRun() {
     for (const [pkgJsonPath, json] of this.pkgJsonMap) {
       this.log(JSON.stringify(json, null, 2));
       this.log(pc.green(`${pc.underline(pc.bold(pkgJsonPath))} will be ⬆️\n`));
@@ -125,32 +139,34 @@ export class NpmScriptComments {
     process.exit(0);
   }
 
-  private handleUnSynced() {
-    if (this.options.ignoreUnSynced) return;
-    for (const [pkgJsonPath, scriptComment] of this.scriptsCommentMap) {
+  private lint() {
+    for (const [pkgJsonPath, scriptCommands] of this.scriptsCommandsMap) {
       const scripts = this.scriptsMap.get(pkgJsonPath);
-      for (const scriptName in scriptComment) {
-        if (!Object.prototype.hasOwnProperty.call(scriptComment, scriptName)) continue;
+      for (const scriptName in scriptCommands) {
+        if (!Object.prototype.hasOwnProperty.call(scriptCommands, scriptName)) continue;
         if (!scripts?.[scriptName]) {
           const errorMessage = pc.red(
-            `[${this.pkgJsonMap.get(pkgJsonPath)?.name}] has unsynced scriptsComment: \`${scriptName}\``,
+            `[${this.pkgJsonMap.get(pkgJsonPath)?.name}] has unsynced scriptsCommands: \`${scriptName}\``,
           );
           this.errors.push(new Error(errorMessage));
         }
       }
     }
+    if (!this.errors.length) {
+      console.log(pc.green("✨ All scriptsCommands are synced with scripts field."));
+      process.exit(0);
+    }
     this.handleErrors();
   }
 
   private handleErrors() {
-    if (!this.errors.length) return;
     for (const error of this.errors) {
       this.log(error.message);
     }
     process.exit(1);
   }
 
-  public static create(options: Options): NpmScriptComments {
-    return new NpmScriptComments(options);
+  public static create(command: Command): NpmScriptCommands {
+    return new NpmScriptCommands(command);
   }
 }

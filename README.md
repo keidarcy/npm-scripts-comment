@@ -1,8 +1,18 @@
-# NPM Script Comments
+# NPM Scripts Command
+
+### Installation
+
+```
+npm install npm-scripts-command
+
+yarn add npm-scripts-command
+
+pnpm add npm-scripts-command
+```
 
 ### Features
 
-- Provide comment for npm scripts.
+- Provide command for npm scripts.
 - Works well community solution.
 - Support monorepo.
 
@@ -11,7 +21,7 @@ In a big `package.json` file, we often have a huge list of `scripts` field. It m
 There is no standard place to document them!
 Document somewhere in a random file could always possible, but it's not standard or consistency.
 
-### *`NPM Script Comment` comes to help!*
+### *`NPM Scripts Command` comes to help!*
 
 ### Get started
 
@@ -19,14 +29,14 @@ Document somewhere in a random file could always possible, but it's not standard
 npx nsc sync
 ```
 
-`NPM Script Comment` will scan all `package.json` and add `scriptComment` like below.
+`NPM Scripts Command` will scan all `package.json` and add `scriptCommands` like below.
 
 ```json
 {
   "scripts": {
     "build": "tsc"
   },
-  "scriptsComment": {
+  "scriptsCommands": {
     "build": "Build whole project"
   }
 }
@@ -39,8 +49,8 @@ Recommend add `sync` to git pre-commit hook.
 npx nsc sync
 ```
 
-If `scripts` has more keys more then `scriptsComment` add script key to `scriptsComment`.
-If `scriptsComment` has more keys than `scripts`, throw errors to require fix deleted script.
+If `scripts` has more keys more then `scriptsCommands` add script key to `scriptsCommands`.
+If `scriptsCommands` has more keys than `scripts`, throw errors to require fix deleted script.
 If you don't to stop commit add with `--ignore-` flag.
 
 ### See report
@@ -49,9 +59,19 @@ If you don't to stop commit add with `--ignore-` flag.
 npx nsc report
 ```
 
-generate all scripts and script comments from current root directory.
+generate all scripts and script commands from current root directory.
 
 
+### Usage
+
+```
+Usage: nsc [command]
+Command:
+  sync          Sync scripts with scriptsCommands field.
+  help          Show this help message.
+  report        Show report of scripts and scriptsCommands.
+  lint          Check if scripts is synced with scriptsCommands field.
+```
 
 
 

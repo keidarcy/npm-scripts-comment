@@ -4,6 +4,9 @@ import {spawnSync} from "node:child_process";
 
 type FnWithLogger = (logger: Console) => void;
 
+/**
+ * @deprecated
+ */
 export function pager(fn: FnWithLogger) {
   const tmpPath = "/tmp/nsc-report.log";
   const output = fs.createWriteStream(tmpPath);

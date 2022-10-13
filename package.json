@@ -1,20 +1,20 @@
 {
-  "name": "npm-scripts-note",
+  "name": "npm-scripts-command",
   "type": "module",
-  "version": "0.0.2-beta.1",
+  "version": "0.0.1",
   "packageManager": "pnpm@7.12.2",
   "description": "",
   "author": "Xing Yahao <yahao.xing1015@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/keidarcy/npm-scripts-note#readme",
+  "homepage": "https://github.com/keidarcy/npm-scripts-command#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/keidarcy/npm-scripts-note.git"
+    "url": "git+https://github.com/keidarcy/npm-scripts-command.git"
   },
   "bin": {
     "nsc": "./bin/cli.mjs"
   },
-  "bugs": "https://github.com/keidarcy/npm-scripts-note/issues",
+  "bugs": "https://github.com/keidarcy/npm-scripts-command/issues",
   "keywords": [],
   "sideEffects": false,
   "exports": {
@@ -66,15 +66,15 @@
     "vitest": "^0.23.4",
     "yargs": "^17.6.0"
   },
-  "scriptsComment": {
+  "scriptsCommands": {
     "build": "",
     "dev": "",
     "lint": "",
     "prepublishOnly": "",
-    "release": "",
+    "release": "bump version and publish to public npm",
     "start": "",
-    "test": "",
-    "typecheck": ""
+    "typecheck": "",
+    "test": ""
   },
   "volta": {
     "node": "18.10.0"
