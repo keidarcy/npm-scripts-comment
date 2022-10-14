@@ -1,6 +1,6 @@
 export type PkgJson = {
   scripts: Scripts;
-  scriptsComments: Scripts;
+  scriptsComments?: Scripts;
   name: string;
 };
 export type PkgPath = string;

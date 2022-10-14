@@ -71,17 +71,17 @@
     "unbuild": "^0.8.11",
     "vitest": "^0.23.4"
   },
+  "volta": {
+    "node": "18.10.0"
+  },
   "scriptsComments": {
     "build": "",
     "dev": "",
     "lint": "",
     "prepublishOnly": "",
-    "release": "bump version and publish to public npm",
+    "release": "",
     "start": "",
-    "typecheck": "",
-    "test": ""
-  },
-  "volta": {
-    "node": "18.10.0"
+    "test": "",
+    "typecheck": ""
   }
 }

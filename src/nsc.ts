@@ -32,6 +32,9 @@ export class NpmScriptComments {
       case Command.DRY_RUN:
         this.dryRun();
         break;
+      case Command.REMOVE:
+        this.remove();
+        break;
       case Command.HELP:
         this.help();
         break;
@@ -42,12 +45,14 @@ export class NpmScriptComments {
 
   private help() {
     const helpMessage = `
-Usage: nsc [command]
-Command:
+Usage: nsc [options]
+
+Options:
   sync          Sync scripts with scriptsCommands field.
   help          Show this help message.
   report        Show report of scripts and scriptsCommands.
   lint          Check if scripts is synced with scriptsCommands field.
+  remove        Remove scriptsCommands field.
 `;
     console.log(helpMessage);
   }
@@ -60,7 +65,7 @@ Command:
   private report() {
     for (const [pkgPath, json] of this.pkgJsonMap) {
       const data: {
-        [x: string]: {"Script Name": string; "Script Comment": string; "Script Comments": string};
+        [x: string]: {"Script Name": string; "Script Command": string; "Script Comments": string};
       } = {};
       this.log(pc.blue(`NPM scripts and description for ${pc.underline(pc.bold(json.name))}.`));
       const scripts = this.scriptsMap.get(pkgPath);
@@ -70,12 +75,22 @@ Command:
         if (!Object.prototype.hasOwnProperty.call(scripts, name)) continue;
         data[index] = {
           "Script Name": name,
-          "Script Comment": scripts[name],
+          "Script Command": scripts[name],
           "Script Comments": scriptsComments?.[name] || "Empty command",
         };
         index++;
       }
       console.table(data);
+    }
+  }
+
+  private remove() {
+    for (const [pkgJsonPath, json] of this.pkgJsonMap) {
+      if (json.scriptsComments) {
+        this.log(pc.red(`🧹 Remove \`scriptsComments\` key for ${pc.underline(pc.bold(pkgJsonPath))}.`));
+        delete json.scriptsComments;
+      }
+      this.pkgJsonMap.set(pkgJsonPath, json);
     }
   }
 
@@ -113,7 +128,7 @@ Command:
         json = {...json, scriptsComments: {}};
       }
       for (const scriptName in scripts) {
-        if (!Object.prototype.hasOwnProperty.call(scripts, scriptName)) continue;
+        if (!Object.prototype.hasOwnProperty.call(scripts, scriptName) || !json.scriptsComments) continue;
         json.scriptsComments[scriptName] = scriptsComments?.[scriptName] || "";
       }
       this.pkgJsonMap.set(pkgJsonPath, json);
@@ -134,6 +149,7 @@ Command:
   }
 
   private dryRun() {
+    this.addComments();
     for (const [pkgJsonPath, json] of this.pkgJsonMap) {
       this.log(JSON.stringify(json, null, 2));
       this.log(pc.green(`${pc.underline(pc.bold(pkgJsonPath))} will be ⬆️\n`));

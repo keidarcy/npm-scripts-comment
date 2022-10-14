@@ -6,5 +6,6 @@ export enum Command {
   REPORT = "report",
   LINT = "lint",
   HELP = "help",
+  REMOVE = "remove",
   DRY_RUN = "dry-run",
 }
