@@ -1,7 +1,7 @@
 {
   "name": "npm-scripts-comment",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packageManager": "pnpm@7.12.2",
   "description": "A package to provide a field in package.json to comment npm scripts.",
   "author": "Xing Yahao <yahao.xing1015@gmail.com>",
